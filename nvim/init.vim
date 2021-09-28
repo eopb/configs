@@ -3,6 +3,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'morhetz/gruvbox'
 " Load plugins
 
+" :CocInstall coc-rust-analyzer
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Syntactic language support
