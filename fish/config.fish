@@ -12,3 +12,4 @@ set -x FZF_DEFAULT_COMMAND rg
 set -x LIBVIRT_DEFAULT_URI "qemu:///system"
 set -x EDITOR nvim
 
+fish_vi_key_bindings
