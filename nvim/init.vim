@@ -14,6 +14,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'dag/vim-fish'
 
+Plug 'editorconfig/editorconfig-vim'
 
 Plug 'mhinz/vim-crates'
 Plug 'tpope/vim-surround'
@@ -30,7 +31,7 @@ colorscheme gruvbox
 
 " LSP configuration
 
-lua << EOF
+lua << END
 local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -40,7 +41,7 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
-  local opts = { noremap=true, silent=true }
+  local opts = { noremap=true, silent=false }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -63,11 +64,11 @@ local on_attach = function(client, bufnr)
 end
 
 lspconfig.rust_analyzer.setup{
-  cmd = { "/home/ethan/.local/bin/rust-analyzer" },
+  server = { path = "/home/ethan/.local/bin/rust-analyzer" },
+  on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
   },
-  on_attach = on_attach,
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -77,7 +78,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-EOF
+END
 
 " Plugin settings
 let g:secure_modelines_allowed_items = [
@@ -116,9 +117,8 @@ let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 let g:rust_clip_command = 'xclip -selection clipboard'
 
-" Use auocmd to force lightline update.
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-
+" Enable type inlay hints
+autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
 
 " =============================================================================
 " # Editor settings
