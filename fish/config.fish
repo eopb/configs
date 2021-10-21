@@ -6,6 +6,7 @@ alias ll='exa -lah'
 alias v='nvim'
 
 alias bin='gio trash'
+alias rust-analyzer="rustup run nightly rust-analyzer"
 
 set -x CARGO_TARGET_DIR /home/ethan/cargo_target
 set -x FZF_DEFAULT_COMMAND rg
