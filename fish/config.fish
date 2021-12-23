@@ -5,7 +5,11 @@ alias ll='exa -lah'
 
 alias v='nvim'
 
-alias bin='gio trash'
+# A clear function that works on Mac
+alias clear='clear && printf "\e[3J"'
+
+# brew install trash
+alias bin='trash'
 alias rust-analyzer="rustup run nightly rust-analyzer"
 
 set -x CARGO_TARGET_DIR /Users/ethan.brierley/cargo_target
