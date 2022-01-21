@@ -1,6 +1,7 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'morhetz/gruvbox'
+
 " Load plugins
 
 Plug 'neovim/nvim-lspconfig'
@@ -25,6 +26,7 @@ Plug 'dag/vim-fish'
 Plug 'editorconfig/editorconfig-vim'
 
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-crates'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
