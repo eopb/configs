@@ -5,7 +5,15 @@ Plug 'morhetz/gruvbox'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
+Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
+Plug 'hrsh7th/cmp-path', {'branch': 'main'}
+Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
+Plug 'ray-x/lsp_signature.nvim'
+
+" Only because nvim-cmp _requires_ snippets
+Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
+Plug 'hrsh7th/vim-vsnip'
 
 " Syntactic language support
 Plug 'cespare/vim-toml'
@@ -34,7 +42,40 @@ colorscheme gruvbox
 " LSP configuration
 
 lua << END
+local cmp = require'cmp'
 local lspconfig = require('lspconfig')
+
+cmp.setup({
+  snippet = {
+    -- REQUIRED by nvim-cmp. get rid of it once we can
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = {
+    -- Tab immediately completes. C-n/C-p to select.
+    ['<Tab>'] = cmp.mapping.confirm({ select = true })
+  },
+  sources = cmp.config.sources({
+    -- TODO: currently snippets from lsp end up getting prioritized -- stop that!
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'path' },
+  }),
+  experimental = {
+    ghost_text = true,
+  },
+})
+
+-- Enable completing paths in :
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  })
+})
+
+-- Setup lspconfig.
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -61,8 +102,13 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
-  -- Forward to other plugins
-  require'completion'.on_attach(client)
+  -- Get signatures (and _only_ signatures) when in argument lists.
+  require "lsp_signature".on_attach({
+    doc_lines = 0,
+    handler_opts = {
+      border = "none"
+    },
+  })
 end
 
 lspconfig.rust_analyzer.setup{
@@ -71,6 +117,14 @@ lspconfig.rust_analyzer.setup{
   flags = {
     debounce_text_changes = 150,
   },
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+      },
+    },
+  },
+  capabilities = capabilities,
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -81,6 +135,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 END
+
+" Enable type inlay hints
+autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
 
 " Plugin settings
 let g:secure_modelines_allowed_items = [
