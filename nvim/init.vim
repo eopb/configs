@@ -123,6 +123,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+imap <C-c> <Esc>
+
 " rust
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
