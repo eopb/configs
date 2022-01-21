@@ -24,6 +24,7 @@ Plug 'dag/vim-fish'
 
 Plug 'editorconfig/editorconfig-vim'
 
+Plug 'tpope/vim-commentary'
 Plug 'mhinz/vim-crates'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
