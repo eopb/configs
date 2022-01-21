@@ -21,6 +21,8 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
+Plug 'scrooloose/nerdtree'
+
 " GUI enhancements
 Plug 'itchyny/lightline.vim'
 
@@ -94,6 +96,11 @@ let g:secure_modelines_allowed_items = [
                 \ "colorcolumn"
                 \ ]
 
+map <C-n> :NERDTreeToggle<CR>
+" Close if nerdtree is the only window left
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd VimEnter * NERDTree | wincmd p
+
 " Lightline
 let g:lightline = {
       \ 'active': {
@@ -110,6 +117,11 @@ let g:lightline = {
 function! LightlineFilename()
   return expand('%:t') !=# '' ? @% : '[No Name]'
 endfunction
+
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 " rust
 let g:rustfmt_autosave = 1
