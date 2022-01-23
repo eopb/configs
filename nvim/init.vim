@@ -16,6 +16,9 @@ Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
 Plug 'hrsh7th/vim-vsnip'
 
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim'
+
 " Syntactic language support
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
@@ -33,6 +36,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
+Plug 'simrat39/symbols-outline.nvim'
+
 Plug 'scrooloose/nerdtree'
 
 " GUI enhancements
@@ -48,7 +53,7 @@ colorscheme gruvbox
 lua << END
 local cmp = require'cmp'
 local lspconfig = require('lspconfig')
-
+require("trouble").setup {}
 cmp.setup({
   snippet = {
     -- REQUIRED by nvim-cmp. get rid of it once we can
@@ -292,3 +297,6 @@ set shortmess+=c " don't give |ins-completion-menu| messages.
 " Show those damn hidden characters
 " Verbose: set listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
 set listchars=nbsp:¬,extends:»,precedes:«,trail:•
+
+au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
