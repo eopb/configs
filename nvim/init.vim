@@ -28,6 +28,8 @@ Plug 'dag/vim-fish'
 
 Plug 'editorconfig/editorconfig-vim'
 
+Plug 'f-person/git-blame.nvim'
+
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-crates'
