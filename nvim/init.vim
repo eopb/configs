@@ -165,7 +165,7 @@ let g:secure_modelines_allowed_items = [
 map <C-n> :NERDTreeToggle<CR>
 " Close if nerdtree is the only window left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd VimEnter * NERDTree | wincmd p
+" autocmd VimEnter * NERDTree | wincmd p
 
 " Lightline
 let g:lightline = {
@@ -300,3 +300,36 @@ set listchars=nbsp:¬,extends:»,precedes:«,trail:•
 
 au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+let mapleader = "\<Space>"
+
+" Toggle 'default' terminal
+nnoremap <Leader>t :call ChooseTerm("term-slider", 1)<CR>
+" Start terminal in current pane
+" nnoremap <Leader><Leader>t :call ChooseTerm("term-pane", 0)<CR>
+ 
+function! ChooseTerm(termname, slider)
+    let pane = bufwinnr(a:termname)
+    let buf = bufexists(a:termname)
+    if pane > 0
+        " pane is visible
+        if a:slider > 0
+            :exe pane . "wincmd c"
+        else
+            :exe "e #" 
+        endif
+    elseif buf > 0
+        " buffer is not in pane
+        if a:slider
+            :exe "topleft split"
+        endif
+        :exe "buffer " . a:termname
+    else
+        " buffer is not loaded, create
+        if a:slider
+            :exe "topleft split"
+        endif
+        :terminal
+        :exe "f " a:termname
+    endif
+endfunction
